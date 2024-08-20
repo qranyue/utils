@@ -2,4 +2,6 @@
 
 [事件监听](./packages/events/)
 
+[局部打印](./packages/print/)
+
 [缓存管理](./packages/storage/)
