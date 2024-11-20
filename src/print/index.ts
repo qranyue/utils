@@ -1,13 +1,13 @@
 /**
  * 获取元素样式
- * @param {HTMLElement} el
  */
-const copycss = (el) => {
-  const css = [];
+const copycss = (el: Element) => {
+  const css = [] as string[];
   for (const r of document.styleSheets) {
     for (const rule of r.cssRules) {
       if (css.indexOf(rule.cssText) >= 0) continue;
-      if (el.querySelector(rule.selectorText) || el.matches(rule.selectorText)) css.push(rule.cssText);
+      const q = rule.cssText.split(" {")[0];
+      if (el.querySelector(q) || el.matches(q)) css.push(rule.cssText);
       if (/^@media print/.test(rule.cssText)) css.push(rule.cssText);
     }
   }
@@ -16,23 +16,20 @@ const copycss = (el) => {
 
 /**
  * 图片处理
- * @param {NodeListOf<HTMLImageElement>} imgs 图片查询
  */
-const imgsed = async (imgs) => {
-  const ps = [];
+const imgsed = async (imgs: NodeListOf<HTMLImageElement>) => {
+  const ps = [] as Promise<void>[];
   for (const img of imgs) {
-    ps.push(new Promise((resolve) => img.addEventListener("load", resolve)));
+    ps.push(new Promise<void>((resolve) => img.addEventListener("load", () => resolve(void 0))));
   }
   return await Promise.all(ps);
 };
 
 /**
  * 打印
- * @param {string|HTMLElement} el
- * @returns {Promise<void>}
  */
-export const print = async (el) => {
-  if (typeof el === "string") el = document.querySelector(el);
+export const print = async (el: string | Element) => {
+  if (typeof el === "string") el = document.querySelector(el)!;
   const i = document.createElement("iframe");
   document.body.appendChild(i);
   i.src = "about:blank";
@@ -41,12 +38,12 @@ export const print = async (el) => {
   i.style.left = "-10000px";
   i.style.visibility = "hidden";
   const win = i.contentWindow;
-  const doc = win.document;
+  const doc = win!.document;
   const css = doc.createElement("style");
   css.textContent = copycss(el);
   doc.head.appendChild(css);
   doc.body.appendChild(el.cloneNode(true));
   await imgsed(doc.querySelectorAll("img"));
-  win.print();
+  win!.print();
   i.remove();
 };
