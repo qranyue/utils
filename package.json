@@ -13,10 +13,9 @@
   "license": "MIT",
   "author": "qranyue",
   "type": "module",
-  "main": "packages/index.js",
+  "main": "dist/index.js",
   "files": [
-    "packages",
-    "!packages/**/*.md",
+    "dist",
     "README.md"
   ],
   "devDependencies": {
